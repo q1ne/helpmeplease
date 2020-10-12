@@ -1,0 +1,44 @@
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace TextAnalysis
+{
+    static class SentencesParserTask
+    {
+        public static List<List<string>> ParseSentences(string text)
+        {
+            var sentencesList = new List<List<string>>();
+            string[] sentences = text.Split('.', '!', '?', ';', ':', '(', ')');
+            for (int i = 0; i < sentences.Length; i++)
+                if (sentences[i].Length > 0)
+                    sentencesList.Add(ParseWords(sentences[i]));
+            return sentencesList;
+        }
+
+        private static List<string> ParseWords(string sentence)
+        {     
+            var wordsList = new List<string>();
+            sentence += ".";
+            var sentenceArray = sentence.ToCharArray();
+            var wordBuilder = new StringBuilder();
+
+
+            foreach(var symbol in sentenceArray)
+            {
+                if (char.IsLetter(symbol) || (symbol == '\''))
+                    wordBuilder.Append(char.ToLower(symbol));
+                else
+                {
+                    if (wordBuilder.Length > 0)
+                    {
+                        wordsList.Add((wordBuilder.ToString()));
+                        wordBuilder.Clear();
+                    }
+                }
+            }
+
+            return wordsList;
+        }   
+    }
+}
